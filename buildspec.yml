@@ -11,8 +11,8 @@ phases:
   pre_build:
     commands:
       # Discover and run unit tests in the 'tests' directory
-      - npm run test-headless
-      - npm run e2e
+      ## - npm run test-headless
+      ## - npm run e2e
   build:
     commands:
       - npm run build:prod
