@@ -20,10 +20,14 @@ phases:
       - npm run build:prod
   post_build:
     commands:
+      # Clear S3 bucket.
+      - echo Clearing S3 bucket
+      - aws s3 rm s3://$WEBSITE_S3_BUCKET/public/ --recursive
+      - echo S3 bucket is cleared.
       - echo Copying started on `date`
       # Use AWS SAM to package the application by using AWS CloudFormation
       - aws s3 cp --recursive dist/nexttrip/ s3://$WEBSITE_S3_BUCKET/public/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-      - sed -i -e "s|assets/|$WEBSITE_S3_PREFIX/public/assets/|g" dist/nexttrip/index.html
+      - sed -i -e "s|__base_href__/|$WEBSITE_S3_PREFIX/public/|g" dist/nexttrip/index.html
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
 artifacts:
